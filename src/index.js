@@ -9,15 +9,13 @@ const list = document.querySelector('.places__list');
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
 
-export const popups = document.querySelectorAll('.popup');
-
 const popupProfile = document.querySelector('.popup_type_edit');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
-const formElement = document.querySelector('.popup_type_edit .popup__form');
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
+const profileFormElement = document.querySelector('.popup_type_edit .popup__form');
+const nameInput = profileFormElement.querySelector('.popup__input_type_name');
+const jobInput = profileFormElement.querySelector('.popup__input_type_description');
 
 const popupAddCard = document.querySelector('.popup_type_new-card');
 
@@ -34,10 +32,10 @@ editProfileButton.addEventListener('click', editProfileHandler);
 function editProfileHandler(evt) {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
-  openPopup(popupProfile, closePopup);
+  openPopup(popupProfile);
 }
 
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   nameInput.textContent = nameInput.value;
@@ -46,33 +44,33 @@ function handleFormSubmit(evt) {
   profileTitle.textContent = nameInput.textContent;
   profileDescription.textContent = jobInput.textContent;
 
-  closePopup(popups);
+  closePopup(popupProfile);
 }
 
-formElement.addEventListener('submit', handleFormSubmit);
+profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
 addCardButton.addEventListener('click', function (evt) {
   cardFormElement.reset();
-  openPopup(popupAddCard, closePopup);
+  openPopup(popupAddCard);
 });
 
-function handlerCardFormSumbit(evt) {
+function handleCardFormSumbit(evt) {
   evt.preventDefault();
   addCard(placeNameInput.value, placeLinkInput.value);
-  closePopup(popups);
-  cardFormElement.reset();
+  closePopup(popupAddCard);
 }
 
-cardFormElement.addEventListener('submit', handlerCardFormSumbit);
+cardFormElement.addEventListener('submit', handleCardFormSumbit);
 
-export function createPopupCardImage(link, name) {
-  popupImage.src = link;
-  popupImage.alt = name;
-  popupImageName.textContent = name;
+export function handleCardImage(cardImage) {
+  popupImage.src = cardImage.src;
+  popupImage.alt = cardImage.alt;
+  popupImageName.textContent = cardImage.alt;
+  openPopup(popupCardImage, closePopup);
 }
 
 function addCard(name, link) {
-  const card = createCard(name, link, deleteCard, likeCard);
+  const card = createCard(name, link, deleteCard, likeCard, handleCardImage, cardTemplate);
   list.prepend(card);
 }
 

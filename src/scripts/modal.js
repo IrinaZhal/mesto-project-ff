@@ -1,35 +1,28 @@
-import { popups } from '../index.js';
 
-export function openPopup(popupName, closePopup) {
-  popupName.classList.add('popup_is-opened');
+export function openPopup(popupElement) {
+  popupElement.classList.add('popup_is-opened');
 
-  const openedPopup = document.querySelector('.popup_is-opened');
-  const closePopupButton = openedPopup.querySelector('.popup__close');
+  popupElement.addEventListener('click', closeByClick);
 
-  closePopupButton.addEventListener('click', () => closePopup(popups));
-
-  openedPopup.addEventListener('click', OverlayHandler);
-
-  document.addEventListener('keydown', keyHandlerEsc);
+  document.addEventListener('keydown', closeByEsc);
 }
 
-export function closePopup(popups) {
-  popups.forEach(function (item) {
-    if (item.classList.contains('popup_is-opened')) {
-      item.classList.remove('popup_is-opened');
-    }
-  });
+export function closePopup(popupElement) {
+  popupElement.classList.remove('popup_is-opened');
+  popupElement.removeEventListener('click', closeByClick);
+  document.removeEventListener('keydown', closeByClick);
 }
 
-export function keyHandlerEsc(evt) {
+export function closeByEsc(evt) {
   if (evt.key === 'Escape') {
-    closePopup(popups);
-    document.removeEventListener('keydown', keyHandlerEsc);
+    const openedPopup = document.querySelector('.popup_is-opened');
+    closePopup(openedPopup);
   }
 }
 
-export function OverlayHandler(evt) {
-  if (evt.target.classList.contains('popup_is-opened')) {
-    closePopup(popups);
+export function closeByClick(evt) {
+  if (evt.target.classList.contains('popup_is-opened') || 
+      evt.target.classList.contains('popup__close')) {
+    closePopup(evt.currentTarget);
   }
 }
