@@ -5,5 +5,5 @@
 2. Сборка проекта при помощи webpack
 3. Настройка запросов к API
 ## Ссылки:
-https://github.com/IrinaZhal/mesto-project-ff.git
-[Ссылка на личную страничку проекта на GitHub Pages](https://IrinaZhal.github.io/mesto-project-ff)
+1. https://github.com/IrinaZhal/mesto-project-ff.git
+2. [Ссылка на личную страничку проекта на GitHub Pages](https://IrinaZhal.github.io/mesto-project-ff)
