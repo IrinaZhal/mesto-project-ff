@@ -1,12 +1,29 @@
 .profile__image {
+  position: relative;
   width: 120px;
   height: 120px;
+  margin: 0 29px 0 0;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
-  background-size: cover;
   background-position: center;
-  margin: 0 29px 0 0;
+  background-size: cover;
+}
+
+.profile__image:hover::after {
+  opacity: 100%;
+}
+
+.profile__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0%;
+  background: transparent url("../../../images/edit-icon.svg") center no-repeat;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-size: 26px 26px;
+  transition: opacity 0.5s;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 740px) {
