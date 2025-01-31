@@ -6,29 +6,26 @@ export const apiConfig = {
   },
 };
 
-export const getUserInfo = (apiConfig) => {
+function handleResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
+export const getUserInfo = () => {
   return fetch(`${apiConfig.baseUrl}/users/me`, {
     headers: apiConfig.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res));
 };
 
-export const getCardsList = (apiConfig) => {
+export const getCardsList = () => {
   return fetch(`${apiConfig.baseUrl}/cards`, {
     headers: apiConfig.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res));
 };
 
-export const changeUserInfo = (apiConfig, name, about) => {
+export const changeUserInfo = (name, about) => {
   return fetch(`${apiConfig.baseUrl}/users/me`, {
     method: "PATCH",
     body: JSON.stringify({
@@ -36,30 +33,20 @@ export const changeUserInfo = (apiConfig, name, about) => {
       about: about,
     }),
     headers: apiConfig.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then((res) => handleResponse(res));
 };
 
-export function changeAvatar(apiConfig, link) {
+export function changeAvatar(link) {
   return fetch(`${apiConfig.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     body: JSON.stringify({
       avatar: link,
     }),
     headers: apiConfig.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-};
+  }).then((res) => handleResponse(res));
+}
 
-export function postCard(apiConfig, name, link) {
+export function postCard(name, link) {
   return fetch(`${apiConfig.baseUrl}/cards`, {
     method: "POST",
     body: JSON.stringify({
@@ -68,49 +55,29 @@ export function postCard(apiConfig, name, link) {
     }),
     headers: apiConfig.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then((res) => handleResponse(res));
 }
 
-export const deleteCardFromList = (apiConfig, cardId) => {
+export const deleteCardFromList = (cardId) => {
   return fetch(`${apiConfig.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: apiConfig.headers,
   })
-    .then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
-};
+    .then((res) => handleResponse(res));
+}
 
-export const putLike = (apiConfig, cardId) => {
+export const putLike = (cardId) => {
   return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: apiConfig.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then((res) => handleResponse(res));
 }
 
-export const deleteLike = (apiConfig, cardId) => {
+export const deleteLike = (cardId) => {
   return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: apiConfig.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then((res) => handleResponse(res));
 }

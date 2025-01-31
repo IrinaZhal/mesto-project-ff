@@ -3,13 +3,12 @@ import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import { openPopup, closePopup } from './scripts/modal.js';
 import {
   enableValidation,
-  clearValidation,
-  validationConfig,
+  clearValidation
 } from './scripts/validation.js';
+import { validationConfig } from './scripts/config.js';
 import {
   getUserInfo,
   getCardsList,
-  apiConfig,
   postCard,
   changeUserInfo,
   changeAvatar,
@@ -62,7 +61,7 @@ function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   
   renderLoading(true, popupChageAvatar);
-  changeAvatar(apiConfig, avatarInput.value)
+  changeAvatar(avatarInput.value)
   .then((res) => {
     profileAvatar.style.backgroundImage = `url(${res.avatar})`;
   })
@@ -100,7 +99,6 @@ function handleProfileFormSubmit(evt) {
 
   renderLoading(true, popupProfile);
   changeUserInfo(
-    apiConfig,
     nameInput.textContent,
     jobInput.textContent
   )
@@ -126,14 +124,14 @@ addCardButton.addEventListener('click', function (evt) {
   openPopup(popupAddCard);
 });
 
+let userId;
+
 function handleCardFormSumbit(evt) {
   evt.preventDefault();
   
   renderLoading(true, popupAddCard);
-  Promise.all([getUserInfo(apiConfig), 
-    postCard(apiConfig, placeNameInput.value, placeLinkInput.value)])
-   .then(([userInfo, cardInfo]) => {
-    const userId = userInfo['_id'];
+    postCard(placeNameInput.value, placeLinkInput.value)
+   .then((cardInfo) => {
     addCard(cardInfo, userId);
    })
    .catch((error) => {
@@ -169,9 +167,9 @@ export function addCard(cardInfo, userId) {
 
 enableValidation(validationConfig);
 
-Promise.all([getUserInfo(apiConfig), getCardsList(apiConfig)])
+Promise.all([getUserInfo(), getCardsList()])
   .then(([userInfo, cardsList]) => {
-    const userId = userInfo['_id'];
+    userId = userInfo['_id'];
     setProfileInfo(userInfo, profileTitle, profileDescription, profileAvatar);
     handleCardsList(cardsList, userId);
   })
@@ -201,7 +199,7 @@ function setProfileInfo(userInfo, profileTitle, profileDescription, profileAvata
 
 function renderLoading(isLoading, popupElement) {
   const popupSubmitButton = popupElement.querySelector('.popup__button');
-  if (isLoading === true) {
+  if (isLoading) {
   popupSubmitButton.textContent = 'Сохранение...';
   } else {
   popupSubmitButton.textContent = 'Сохранить';

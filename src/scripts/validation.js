@@ -1,28 +1,18 @@
-export const validationConfig = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_active'
-};
-
-
-export const showInputError = (formElement, inputElement, errorMessage) => {
+export const showInputError = (validationConfig, formElement, inputElement, errorMessage) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(validationConfig.inputErrorClass);
   errorElement.textContent = errorMessage;
   errorElement.classList.add(validationConfig.errorClass);
 }
 
-export const hideInputError = (formElement, inputElement) => {
+export const hideInputError = (validationConfig, formElement, inputElement) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove(validationConfig.inputErrorClass);
   errorElement.classList.remove(validationConfig.errorClass);
   errorElement.textContent = '';
 }
 
-export const isValid = (formElement, inputElement) => {
+export const isValid = (validationConfig, formElement, inputElement) => {
     if (inputElement.validity.patternMismatch) {
         // встроенный метод setCustomValidity принимает на вход строку
         // и заменяет ею стандартное сообщение об ошибке
@@ -35,18 +25,18 @@ export const isValid = (formElement, inputElement) => {
 
 
   if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
+    showInputError(validationConfig, formElement, inputElement, inputElement.validationMessage);
  } else {
-    hideInputError(formElement, inputElement);
+    hideInputError(validationConfig, formElement, inputElement);
  }
 }
 
-const setEventListeners = (formElement) => {
+const setEventListeners = (validationConfig, formElement) => {
     // Находим все поля внутри формы,
     // сделаем из них массив методом Array.from
     const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
-    toggleButtonState(inputList, buttonElement);
+    toggleButtonState(validationConfig, inputList, buttonElement);
   
     // Обойдём все элементы полученной коллекции
     inputList.forEach((inputElement) => {
@@ -54,8 +44,8 @@ const setEventListeners = (formElement) => {
       inputElement.addEventListener('input', () => {
         // Внутри колбэка вызовем isValid,
         // передав ей форму и проверяемый элемент
-        isValid(formElement, inputElement);
-        toggleButtonState(inputList, buttonElement);
+        isValid(validationConfig, formElement, inputElement);
+        toggleButtonState(validationConfig, inputList, buttonElement);
       });
     });
   };
@@ -69,7 +59,7 @@ const setEventListeners = (formElement) => {
     formList.forEach((formElement) => {
       // Для каждой формы вызовем функцию setEventListeners,
       // передав ей элемент формы
-      setEventListeners(formElement);
+      setEventListeners(validationConfig, formElement);
     });
   };
 
@@ -83,7 +73,7 @@ const hasInvalidInput = (inputList) => {
     })
   };
 
-  const toggleButtonState = (inputList, buttonElement) => {
+  const toggleButtonState = (validationConfig, inputList, buttonElement) => {
     // Если есть хотя бы один невалидный инпут
     if (hasInvalidInput(inputList)) {
       // сделай кнопку неактивной
@@ -101,7 +91,7 @@ const hasInvalidInput = (inputList) => {
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
 
     inputList.forEach((inputElement) => {
-    hideInputError(formElement, inputElement);
+    hideInputError(validationConfig, formElement, inputElement);
     });
 
     buttonElement.disabled = true;
